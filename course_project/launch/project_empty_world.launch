@@ -1,0 +1,27 @@
+<launch>
+
+  <!-- Gazebo empty world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Robot model -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find course_project)/urdf/project.xacro'" />
+
+  <!-- Spawn the robot model -->
+  <node name="movil" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model course_project -z 0.02" />
+
+  <!-- Visualization of the robot using Rviz -->
+  <param name="use_gui" value="true"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find course_project)/config/project_config.rviz" required="true" />
+
+  <!-- TF Transform Broadcaster -->
+  <node name="tf_project" pkg="course_project" type="tf_project.py" />
+
+
+</launch>
